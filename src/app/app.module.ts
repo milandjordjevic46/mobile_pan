@@ -4,21 +4,29 @@ import { NativeScriptUISideDrawerModule } from "nativescript-ui-sidedrawer/angul
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
+import { LoginComponent } from "./auth/login/login.component";
+import { FeaturedComponent } from "./featured/featured.component";
+import { HomeComponent } from "./home/home.component";
+import { SearchComponent } from "./search/search.component";
+import { SettingsComponent } from "./settings/settings.component";
+import { NavBarComponent } from './shared/nav-bar/nav-bar.component';
 
 @NgModule({
-    bootstrap: [
-        AppComponent
-    ],
+    bootstrap: [AppComponent],
     imports: [
         AppRoutingModule,
         NativeScriptModule,
         NativeScriptUISideDrawerModule
     ],
     declarations: [
-        AppComponent
+        AppComponent,
+        LoginComponent,
+        FeaturedComponent,
+        HomeComponent,
+        SearchComponent,
+        SettingsComponent,
+        NavBarComponent
     ],
-    schemas: [
-        NO_ERRORS_SCHEMA
-    ]
+    schemas: [NO_ERRORS_SCHEMA]
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,18 +1,23 @@
 import { NgModule } from "@angular/core";
 import { Routes } from "@angular/router";
 import { NativeScriptRouterModule } from "nativescript-angular/router";
+import { SettingsComponent } from "./settings/settings.component";
+import { HomeComponent } from "./home/home.component";
+import { SearchComponent } from "./search/search.component";
+import { FeaturedComponent } from "./featured/featured.component";
+import { LoginComponent } from "./auth/login/login.component";
 
 const routes: Routes = [
     { path: "", redirectTo: "/home", pathMatch: "full" },
-    { path: "home", loadChildren: () => import("~/app/home/home.module").then((m) => m.HomeModule) },
-    { path: "browse", loadChildren: () => import("~/app/browse/browse.module").then((m) => m.BrowseModule) },
-    { path: "search", loadChildren: () => import("~/app/search/search.module").then((m) => m.SearchModule) },
-    { path: "featured", loadChildren: () => import("~/app/featured/featured.module").then((m) => m.FeaturedModule) },
-    { path: "settings", loadChildren: () => import("~/app/settings/settings.module").then((m) => m.SettingsModule) }
+    { path: "home", component: HomeComponent },
+    { path: "search", component: SearchComponent },
+    { path: "featured", component: FeaturedComponent },
+    { path: "settings", component: SettingsComponent },
+    { path: "ns-login", component: LoginComponent }
 ];
 
 @NgModule({
     imports: [NativeScriptRouterModule.forRoot(routes)],
     exports: [NativeScriptRouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

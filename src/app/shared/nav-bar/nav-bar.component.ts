@@ -3,18 +3,14 @@ import { RadSideDrawer } from "nativescript-ui-sidedrawer";
 import * as app from "tns-core-modules/application";
 
 @Component({
-    selector: "Browse",
-    templateUrl: "./browse.component.html"
+    selector: "ns-nav-bar",
+    templateUrl: "./nav-bar.component.html",
+    styleUrls: ["./nav-bar.component.css"]
 })
-export class BrowseComponent implements OnInit {
+export class NavBarComponent implements OnInit {
+    constructor() {}
 
-    constructor() {
-        // Use the component constructor to inject providers.
-    }
-
-    ngOnInit(): void {
-        // Init your component properties here.
-    }
+    ngOnInit(): void {}
 
     onDrawerButtonTap(): void {
         const sideDrawer = <RadSideDrawer>app.getRootView();
