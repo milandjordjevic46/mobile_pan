@@ -10,6 +10,8 @@ import { filter } from "rxjs/operators";
 import * as app from "tns-core-modules/application";
 import { AuthService } from "./auth/auth.service";
 
+
+
 @Component({
     selector: "ns-app",
     templateUrl: "app.component.html"

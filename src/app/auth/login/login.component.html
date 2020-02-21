@@ -1,3 +1,13 @@
-<ns-nav-bar></ns-nav-bar>
-<Button text="login works!" class="btn btn-primary"></Button>
-<Button text="login works!" (tap)="onLoginTap()" class="btn btn-primary"></Button>
+<!-- <ns-nav-bar title="Milan"></ns-nav-bar> -->
+<FlexboxLayout flexDirection="column" justifyContent="space-between" class="background_login">
+    <StackLayout>
+    </StackLayout>
+    <StackLayout [formGroup]="loginForm">
+            <TextField formControlName="email" keyboardType="email" hint="email"></TextField>
+            <TextField formControlName="password" secure="true" hint="Pass"></TextField>
+            <Button text="Log in" type="submit" name="submit" (tap)="login()" class="-primary font-bold"></Button>
+            <Label class='text-center mt-10 mb-10 text_white' text="Or login with"></Label>
+            <Button text="GOOGLE" (tap)="onLoginTap()" class="red_back text_white font-bold" width="50%"></Button>
+            <Button text="FACEBOOK" (tap)="onLoginTap()" class="blue_back text_white font-bold" width="50%"></Button>
+    </StackLayout>
+</FlexboxLayout>

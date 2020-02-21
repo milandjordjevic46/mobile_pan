@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input } from "@angular/core";
 import { RadSideDrawer } from "nativescript-ui-sidedrawer";
 import * as app from "tns-core-modules/application";
 
@@ -8,6 +8,9 @@ import * as app from "tns-core-modules/application";
     styleUrls: ["./nav-bar.component.css"]
 })
 export class NavBarComponent implements OnInit {
+    @Input()
+    title: string;
+     
     constructor() {}
 
     ngOnInit(): void {}

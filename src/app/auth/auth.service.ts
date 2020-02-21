@@ -32,7 +32,7 @@ export class AuthService {
             clientId:
                 "822285105532-ecf0oqog2mpvf2ug67ncvtp85741tjmc.apps.googleusercontent.com",
             redirectUri:
-                "com.googleusercontent.apps.822285105532-ecf0oqog2mpvf2ug67ncvtp85741tjmc:/auth",
+                "com.googleusercontent.apps.822285105532-ecf0oqog2mpvf2ug67ncvtp85741tjmc:/home",
             urlScheme:
                 "com.googleusercontent.apps.822285105532-ecf0oqog2mpvf2ug67ncvtp85741tjmc",
             scopes: ["email"]
@@ -45,8 +45,7 @@ export class AuthService {
     tnsOAuthLogin(providerType) {
         this.client = new TnsOAuthClient(providerType);
 
-        this.client.loginWithCompletion(
-            (tokenResult: ITnsOAuthTokenResult, err) => {
+        this.client.loginWithCompletion((tokenResult: ITnsOAuthTokenResult, err) => {
                 if (err) {
                     console.log("ERROR GOOGLE LOGIN", err);
                 } else {

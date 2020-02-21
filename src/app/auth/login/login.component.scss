@@ -1,0 +1,22 @@
+@import "../../shared/scss/colors.scss";
+
+.btnn {
+    background-color: $red;
+}
+
+.red_back {
+    background-color: $red;
+}
+.blue_back {
+    background-color: $blue;
+}
+.text_white {
+    color: $white;
+}
+
+.background_login {
+    background-image: url("~/app/images/background.png");
+    background-repeat: no-repeat;
+    width: 100%;
+    background-size: cover;
+}
