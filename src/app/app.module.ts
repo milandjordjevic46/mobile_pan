@@ -12,6 +12,10 @@ import { SearchComponent } from "./search/search.component";
 import { SettingsComponent } from "./settings/settings.component";
 import { NavBarComponent } from './shared/nav-bar/nav-bar.component';
 import { ReactiveFormsModule } from "@angular/forms";
+import { HttpClientModule } from "@angular/common/http";
+import { ChooseLngComponent } from './shared/choose-lng/choose-lng.component';
+import { DropDownModule } from "nativescript-drop-down/angular";
+import { SigninComponent } from './auth/signin/signin.component';
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -20,7 +24,9 @@ import { ReactiveFormsModule } from "@angular/forms";
         NativeScriptModule,
         NativeScriptUISideDrawerModule,
         NativeScriptFormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        HttpClientModule,
+        DropDownModule
     ],
     declarations: [
         AppComponent,
@@ -29,7 +35,9 @@ import { ReactiveFormsModule } from "@angular/forms";
         HomeComponent,
         SearchComponent,
         SettingsComponent,
-        NavBarComponent
+        NavBarComponent,
+        ChooseLngComponent,
+        SigninComponent
     ],
     schemas: [NO_ERRORS_SCHEMA]
 })

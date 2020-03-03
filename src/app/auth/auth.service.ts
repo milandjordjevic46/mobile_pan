@@ -23,7 +23,8 @@ export class AuthService {
 
     configureOAuthProviders() {
         const googleProvider = this.configureOAuthProviderGoogle();
-        configureTnsOAuth([googleProvider]);
+        const facebookProvider = this.configureOAuthProviderFacebook();
+        configureTnsOAuth([googleProvider, facebookProvider]);
     }
 
     configureOAuthProviderGoogle() {
@@ -42,7 +43,23 @@ export class AuthService {
         return googleProvider;
     }
 
+    configureOAuthProviderFacebook() {
+        const facebookProviderOptions: TnsOaProviderOptionsFacebook = {
+            openIdSupport: "oid-none",
+            clientId:
+                "679014456192534",
+            clientSecret:
+                "1ffb4575505d8b3f98932645b82c647c",
+                redirectUri: "https://www.facebook.com/connect/login_success.html",
+            scopes: ["email"]
+        };
+
+        const facebookProvider = new TnsOaProviderFacebook(facebookProviderOptions);
+        return facebookProvider;
+    }
+
     tnsOAuthLogin(providerType) {
+        console.log(providerType, 'PROVIDER')
         this.client = new TnsOAuthClient(providerType);
 
         this.client.loginWithCompletion((tokenResult: ITnsOAuthTokenResult, err) => {

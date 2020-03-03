@@ -9,8 +9,7 @@ import {
 import { filter } from "rxjs/operators";
 import * as app from "tns-core-modules/application";
 import { AuthService } from "./auth/auth.service";
-
-
+import { LanguageService } from "./shared/services/language.service";
 
 @Component({
     selector: "ns-app",
@@ -23,7 +22,8 @@ export class AppComponent implements OnInit {
     constructor(
         private router: Router,
         private routerExtensions: RouterExtensions,
-        private auth_service: AuthService
+        private auth_service: AuthService,
+        private lng_service: LanguageService
     ) {
         // Use the component constructor to inject services.
     }
@@ -39,6 +39,14 @@ export class AppComponent implements OnInit {
                     (this._activatedUrl = event.urlAfterRedirects)
             );
         this.auth_service.configureOAuthProviders();
+
+        // na pocetku setujem jezik aplikaciji
+        this.lng_service.getLng().subscribe(
+            res => {
+                this.lng_service.updateBroadCastMessage(res);
+            },
+            err => {}
+        );
     }
 
     get sideDrawerTransition(): DrawerTransitionBase {

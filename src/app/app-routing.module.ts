@@ -6,14 +6,29 @@ import { HomeComponent } from "./home/home.component";
 import { SearchComponent } from "./search/search.component";
 import { FeaturedComponent } from "./featured/featured.component";
 import { LoginComponent } from "./auth/login/login.component";
+import { SigninComponent } from "./auth/signin/signin.component";
+import { AuthGuardGuard } from "./auth/auth-guard.guard";
 
 const routes: Routes = [
     { path: "", redirectTo: "/home", pathMatch: "full" },
-    { path: "home", component: HomeComponent },
-    { path: "search", component: SearchComponent },
-    { path: "featured", component: FeaturedComponent },
-    { path: "settings", component: SettingsComponent },
-    { path: "ns-login", component: LoginComponent }
+    { path: "ns-login", component: LoginComponent },
+    { path: "ns-signin", component: SigninComponent },
+    { path: "home", component: HomeComponent, canActivate: [AuthGuardGuard] },
+    {
+        path: "search",
+        component: SearchComponent,
+        canActivate: [AuthGuardGuard]
+    },
+    {
+        path: "featured",
+        component: FeaturedComponent,
+        canActivate: [AuthGuardGuard]
+    },
+    {
+        path: "settings",
+        component: SettingsComponent,
+        canActivate: [AuthGuardGuard]
+    }
 ];
 
 @NgModule({
