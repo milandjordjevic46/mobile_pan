@@ -1,7 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { LanguageService } from "~/app/shared/services/language.service";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { SelectedIndexChangedEventData } from "nativescript-drop-down";
 
 @Component({
     selector: "ns-signin",
@@ -9,26 +7,27 @@ import { SelectedIndexChangedEventData } from "nativescript-drop-down";
     styleUrls: ["./signin.component.scss"]
 })
 export class SigninComponent implements OnInit {
-  @ViewChild("dd", {static: false}) izborZemlje: ElementRef;
-  signInForm: FormGroup;
+    @ViewChild("dd", { static: false }) izborZemlje: ElementRef;
     lng: Object;
     privacy: boolean;
-    items: Array<string> = ["<>", "milan", "milan2", "milan3"];
+    webViewSrc: string;
 
     constructor(
-        private lang_service: LanguageService,
-        private form_builder: FormBuilder
+        private lang_service: LanguageService
     ) {
-        this.signInForm = this.form_builder.group({
-            ime: [null, Validators.required],
-            prezime: [null, Validators.required],
-            email: [null, Validators.required],
-            zemlja: [0, Validators.required],
-            jezikZemlje: [0, Validators.required]
-        });
-        this.lang_service.broadCast.subscribe(
+      this.lang_service.broadCast.subscribe(
+            // ovo je prevod
             res => {
                 this.lng = res;
+            },
+            err => {}
+        );
+        this.lang_service.currentLNG.subscribe(
+            // subscribe-ovao sam se da bih na svaku promenu jezika ponovo pozivao webvieww
+            res => {
+                this.webViewSrc =
+                    "https://online.ipsos-adria.com/ipsos_mobile_pan/#!/registracija?jezik=" +
+                    res + "&v=4";
             },
             err => {}
         );
@@ -36,20 +35,31 @@ export class SigninComponent implements OnInit {
 
     ngOnInit(): void {}
 
-    signin() {
-        console.log("signin radi");
-    }
+    // onLoadStarted(args: LoadEventData) {
+    //     const webView = args.object as WebView;
 
-    checkCondition() {
-        this.privacy = !this.privacy;
-    }
+    //     if (!args.error) {
+    //         console.log("Load Start");
+    //         console.log(`EventName: ${args.eventName}`);
+    //         console.log(`NavigationType: ${args.navigationType}`);
+    //         console.log(`Url: ${args.url}`);
+    //     } else {
+    //         console.log(`EventName: ${args.eventName}`);
+    //         console.log(`Error: ${args.error}`);
+    //     }
+    // }
 
-    onchangeCountry(args: SelectedIndexChangedEventData) {
-        console.log(
-            `Drop Down selected index changed from ${args.oldIndex} to ${args.newIndex}`
-        );
-    }
+    // onLoadFinished(args: LoadEventData) {
+    //     const webView = args.object as WebView;
 
-  onchangeLanguage(args: SelectedIndexChangedEventData) { }
-  
+    //     if (!args.error) {
+    //         console.log("Load Finished");
+    //         console.log(`EventName: ${args.eventName}`);
+    //         console.log(`NavigationType: ${args.navigationType}`);
+    //         console.log(`Url: ${args.url}`);
+    //     } else {
+    //         console.log(`EventName: ${args.eventName}`);
+    //         console.log(`Error: ${args.error}`);
+    //     }
+    // }
 }

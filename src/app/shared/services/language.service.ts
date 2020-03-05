@@ -10,12 +10,18 @@ import { BehaviorSubject } from "rxjs";
 export class LanguageService extends Environment {
     private broadCastMessage = new BehaviorSubject<string>("{}");
     broadCast = this.broadCastMessage.asObservable();
+    private currentLng = new BehaviorSubject<string>("");
+    currentLNG = this.currentLng.asObservable();
 
     constructor(private http: HttpClient) {
         super();
     }
     updateBroadCastMessage(newMessage) {
         this.broadCastMessage.next(newMessage);
+    }
+
+    updateCurrentLng(newLng) {
+        this.currentLng.next(newLng);
     }
 
     getLng(param?) {
@@ -35,6 +41,7 @@ export class LanguageService extends Environment {
         } else {
             lng = param.toUpperCase();
         }
+        this.updateCurrentLng(lng);
         let link = this.langLink + lng + "-" + lng + ".json";
         return this.http.get(link);
     }

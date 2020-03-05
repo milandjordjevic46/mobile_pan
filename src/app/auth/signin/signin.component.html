@@ -1,4 +1,7 @@
-<ns-nav-bar title="IPSOS MOBILE"></ns-nav-bar>
-<FlexboxLayout flexDirection="column" justifyContent="space-between" class="background_login">
-    <WebView row="1" loaded="onWebViewLoaded" id="myWebView" src="{{ webViewSrc }}" />
+<ns-nav-bar title="IPSOS MOBILE SIGNIN"></ns-nav-bar>
+
+<FlexboxLayout flexDirection="column" justifyContent="space-between" class="background_signin">
+    <GridLayout class="background-login">
+        <WebView style="height: 99%" [src]="webViewSrc"></WebView>
+    </GridLayout>
 </FlexboxLayout>

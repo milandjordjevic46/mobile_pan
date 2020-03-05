@@ -29,14 +29,7 @@ export class ChooseLngComponent implements OnInit {
     onchange(args: SelectedIndexChangedEventData) {
         this.lng_service.getLng(this.countries[args.newIndex]).subscribe(
           res => {
-            console.log('usao u onchange',this.countries[args.newIndex])
-                if (!res["login"]) {
-                    this.lng_service.updateBroadCastMessage({
-                        login: {
-                            l2: "nistaaa"
-                        }
-                    });
-                } else this.lng_service.updateBroadCastMessage(res);
+                 this.lng_service.updateBroadCastMessage(res);
             },
             err => {}
         );
