@@ -5,12 +5,12 @@ import * as app from "tns-core-modules/application";
 @Component({
     selector: "ns-nav-bar",
     templateUrl: "./nav-bar.component.html",
-    styleUrls: ["./nav-bar.component.css"]
+    styleUrls: ["./nav-bar.component.scss"]
 })
 export class NavBarComponent implements OnInit {
     @Input()
     title: string;
-     
+
     constructor() {}
 
     ngOnInit(): void {}

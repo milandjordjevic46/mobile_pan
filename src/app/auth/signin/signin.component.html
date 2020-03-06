@@ -2,6 +2,6 @@
 
 <FlexboxLayout flexDirection="column" justifyContent="space-between" class="background_signin">
     <GridLayout class="background-login">
-        <WebView style="height: 99%" [src]="webViewSrc"></WebView>
+        <WebView (loaded)="webViewLoaded($event)" style="height: 99%" [src]="webViewSrc"></WebView>
     </GridLayout>
 </FlexboxLayout>
