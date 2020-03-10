@@ -4,7 +4,7 @@
     </StackLayout>
     <StackLayout [formGroup]="loginForm">
         <TextField formControlName="email" keyboardType="email" hint="{{lng?.login?.l2}}"></TextField>
-        <TextField formControlName="password" secure="true" hint="{{lng?.login?.l3}}"></TextField>
+        <TextField formControlName="pass" secure="true" hint="{{lng?.login?.l3}}"></TextField>
         <Button text="{{lng?.login?.l4}}" type="submit" name="submit" (tap)="login()" class="-primary font-bold"></Button>
         <Label class='text-center mt-10 mb-10 text_white' text="{{lng?.login?.l6}}"></Label>
         <Button text="GOOGLE" (tap)="onLoginTap('google')" class="red_back text_white font-bold" width="50%"></Button>

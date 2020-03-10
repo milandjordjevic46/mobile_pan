@@ -1,5 +1,6 @@
 export class Environment {
     constructor() { }
-    apiLink = 'https://online.ipsos-adria.com/';
+    // apiLink = 'https://panel.ipsos-adria.com/'
+    apiLink = 'https://ipsosanketa.com/';
     langLink = 'https://panel.ipsos-adria.com/languages/';
 }

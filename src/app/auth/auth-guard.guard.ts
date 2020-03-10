@@ -8,14 +8,13 @@ import {
 } from "@angular/router";
 import * as appSettings from "tns-core-modules/application-settings";
 import { Observable } from "rxjs";
+import { AuthService } from "./auth.service";
 
 @Injectable({
     providedIn: "root"
 })
 export class AuthGuardGuard implements CanActivate {
-    constructor(
-        private router: Router
-    ) {}
+    constructor(private router: Router, private auth_service: AuthService) {}
     canActivate(
         next: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
@@ -23,14 +22,14 @@ export class AuthGuardGuard implements CanActivate {
         | Observable<boolean | UrlTree>
         | Promise<boolean | UrlTree>
         | boolean
-      | UrlTree {
-      // appSettings.setString('isp_data', "0");
-      // let mi = appSettings.getString('isp_data');
-      //   if ( 1 != 1) {
-      //       this.router.navigate(["ns-login"]);
-      //       return false; 
-      // } else 
+        | UrlTree {
+        if (!appSettings.getString("isp_data_login")) {
+            this.auth_service.updateUserLogged(false);
             this.router.navigate(["ns-login"]);
-          return false
+            return false;
+        } else {
+            this.auth_service.updateUserLogged(true);
+            return true;
+        }
     }
 }

@@ -16,6 +16,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { ChooseLngComponent } from './shared/choose-lng/choose-lng.component';
 import { DropDownModule } from "nativescript-drop-down/angular";
 import { SigninComponent } from './auth/signin/signin.component';
+import { CookieService} from 'ngx-cookie-service'
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -38,6 +39,9 @@ import { SigninComponent } from './auth/signin/signin.component';
         NavBarComponent,
         ChooseLngComponent,
         SigninComponent
+    ],
+    providers: [
+        CookieService
     ],
     schemas: [NO_ERRORS_SCHEMA]
 })

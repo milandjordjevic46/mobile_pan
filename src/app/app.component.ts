@@ -11,6 +11,14 @@ import * as app from "tns-core-modules/application";
 import { AuthService } from "./auth/auth.service";
 import { LanguageService } from "./shared/services/language.service";
 
+interface userData {
+    name: '',
+    lastName: '',
+    email: '',
+    panelid: '',
+    ime_vokativ: ''
+}
+
 @Component({
     selector: "ns-app",
     templateUrl: "app.component.html"
@@ -18,6 +26,7 @@ import { LanguageService } from "./shared/services/language.service";
 export class AppComponent implements OnInit {
     private _activatedUrl: string;
     private _sideDrawerTransition: DrawerTransitionBase;
+    logged: boolean;
 
     constructor(
         private router: Router,
@@ -25,7 +34,7 @@ export class AppComponent implements OnInit {
         private auth_service: AuthService,
         private lng_service: LanguageService
     ) {
-        // Use the component constructor to inject services.
+        // Use the component constructor to inject service
     }
 
     ngOnInit(): void {
@@ -47,6 +56,11 @@ export class AppComponent implements OnInit {
             },
             err => {}
         );
+
+        this.auth_service.isLogged.subscribe(res => {
+            this.logged = res;
+            console.log("Logged", res)
+        })
     }
 
     get sideDrawerTransition(): DrawerTransitionBase {
