@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { LanguageService } from "~/app/shared/services/language.service";
 import * as appSettings from "tns-core-modules/application-settings";
 import { Router } from "@angular/router";
-import { CookieService } from "ngx-cookie-service";
+const dialogs = require("ui/dialogs");
 
 @Component({
     selector: "ns-login",
@@ -14,6 +14,8 @@ import { CookieService } from "ngx-cookie-service";
 })
 export class LoginComponent implements OnInit {
     loginForm: FormGroup;
+    googleFacebook: boolean;
+    logged: boolean;
     lng: any = {
         login: {
             l2: "nistaa"
@@ -29,7 +31,8 @@ export class LoginComponent implements OnInit {
         this.loginForm = this.form_builder.group({
             email: [null, Validators.required],
             pass: [null, Validators.required],
-            mobile: true
+            mobile: true,
+            auth_type: 1
         });
         this.lang_service.broadCast.subscribe(
             res => {
@@ -40,7 +43,13 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        console.log("LOGIN");
+        console.log("LOGINN");
+        // let data = JSON.parse(appSettings.getString("isp_data_login"));
+        console.log("DATATATA", appSettings.getString("isp_data_login"));
+        // if (data && data.auth_type) {
+        // data.mobile = true;
+        // this.login(data);
+        // }
     }
 
     onLoginTap(param) {
@@ -48,23 +57,18 @@ export class LoginComponent implements OnInit {
     }
 
     login(): any {
-        // alert(JSON.parse(this.loginForm.value));
-        // if (!this.loginForm.value.email || !this.loginForm.value.pass)
-        //     return false;
-        this.auth_service.loginWithPass(this.loginForm.value).subscribe(
-            res => {
-                if (res['ok'] == true) {
-                    appSettings.setString(
-                        "isp_data_login",
-                        JSON.stringify(this.loginForm.value)
-                    );
-                    this.router.navigate(["home"]);
-                } else
-                    alert('greska se desila sa sifrom');
-            },
-            err => {
-                console.log("errr", err);
-            }
-        );
+        this.router.navigate(["home"]);
+        // this.auth_service.loginWithPass(this.loginForm.value).subscribe(
+        //     res => {
+        //         appSettings.setString(
+        //             "isp_data_login",
+        //             JSON.stringify(this.loginForm.value)
+        //         );
+        //         this.router.navigate(["home"]);
+        //     },
+        //     err => {
+        //         console.log("errr", err);
+        //     }
+        // );
     }
 }

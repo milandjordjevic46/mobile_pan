@@ -10,14 +10,7 @@ import { filter } from "rxjs/operators";
 import * as app from "tns-core-modules/application";
 import { AuthService } from "./auth/auth.service";
 import { LanguageService } from "./shared/services/language.service";
-
-interface userData {
-    name: '',
-    lastName: '',
-    email: '',
-    panelid: '',
-    ime_vokativ: ''
-}
+import * as appSettings from "tns-core-modules/application-settings";
 
 @Component({
     selector: "ns-app",
@@ -40,7 +33,7 @@ export class AppComponent implements OnInit {
     ngOnInit(): void {
         this._activatedUrl = "/home";
         this._sideDrawerTransition = new SlideInOnTopTransition();
-
+        // appSettings.remove("isp_data_login");
         this.router.events
             .pipe(filter((event: any) => event instanceof NavigationEnd))
             .subscribe(
@@ -58,9 +51,13 @@ export class AppComponent implements OnInit {
         );
 
         this.auth_service.isLogged.subscribe(res => {
-            this.logged = res;
-            console.log("Logged", res)
-        })
+            if (res == true && !this.logged) {
+                this.logged = true;
+                console.log("usao u navigate");
+                this.router.navigate(["home"]);
+            } else this.logged = res;
+            console.log("Logged", res);
+        });
     }
 
     get sideDrawerTransition(): DrawerTransitionBase {

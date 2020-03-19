@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import {
     configureTnsOAuth,
     TnsOAuthClient,
@@ -14,6 +14,14 @@ import {
 import { BehaviorSubject } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { Environment } from "../shared/services/environment";
+import * as appSettings from "tns-core-modules/application-settings";
+import { Router } from "@angular/router";
+import {
+    borderTopRightRadiusProperty,
+    Observable
+} from "tns-core-modules/ui/page/page";
+import { LanguageService } from "../shared/services/language.service";
+import { timeout } from "rxjs/operators";
 
 @Injectable({
     providedIn: "root"
@@ -24,7 +32,11 @@ export class AuthService extends Environment {
     private logged = new BehaviorSubject<boolean>(false);
     isLogged = this.logged.asObservable();
 
-    constructor(private http: HttpClient) {
+    constructor(
+        private http: HttpClient,
+        private ngZone: NgZone,
+        private router: Router
+    ) {
         super();
     }
 
@@ -33,12 +45,9 @@ export class AuthService extends Environment {
     }
 
     loginWithPass(data) {
-        return this.http.post(
-            // this.apiLink + "php/mobile_panelist.php",
-            'https://ipsosanketa.com/login.php',
-            data,
-            { responseType: "json" }
-        );
+        return this.http.post("https://ipsosanketa.com/loginz.php", data, {
+            responseType: "json"
+        });
     }
 
     configureOAuthProviders() {
@@ -51,11 +60,11 @@ export class AuthService extends Environment {
         const googleProviderOptions: TnsOaProviderOptionsGoogle = {
             openIdSupport: "oid-full",
             clientId:
-                "822285105532-ecf0oqog2mpvf2ug67ncvtp85741tjmc.apps.googleusercontent.com",
+                "308014954641-k1mofnd02vadqhofcmus6guguke1hamp.apps.googleusercontent.com",
             redirectUri:
-                "com.googleusercontent.apps.822285105532-ecf0oqog2mpvf2ug67ncvtp85741tjmc:/home",
+                "com.googleusercontent.apps.308014954641-k1mofnd02vadqhofcmus6guguke1hamp:/auth",
             urlScheme:
-                "com.googleusercontent.apps.822285105532-ecf0oqog2mpvf2ug67ncvtp85741tjmc",
+                "com.googleusercontent.apps.308014954641-k1mofnd02vadqhofcmus6guguke1hamp",
             scopes: ["email"]
         };
 
@@ -66,8 +75,8 @@ export class AuthService extends Environment {
     configureOAuthProviderFacebook() {
         const facebookProviderOptions: TnsOaProviderOptionsFacebook = {
             openIdSupport: "oid-none",
-            clientId: "679014456192534",
-            clientSecret: "1ffb4575505d8b3f98932645b82c647c",
+            clientId: "302880763694141",
+            clientSecret: "35ebb02cc8cb5473d9647e8f717d32b7",
             redirectUri: "https://www.facebook.com/connect/login_success.html",
             scopes: ["email"]
         };
@@ -81,15 +90,48 @@ export class AuthService extends Environment {
     tnsOAuthLogin(providerType) {
         console.log(providerType, "PROVIDER");
         this.client = new TnsOAuthClient(providerType);
-
+        var that = this;
         this.client.loginWithCompletion(
             (tokenResult: ITnsOAuthTokenResult, err) => {
-                if (err) {
+                if (!tokenResult) {
                     console.log("ERROR GOOGLE LOGIN", err);
                 } else {
-                    console.log("LOGGED IN GOOGLE", tokenResult.accessToken);
+                    let obj = {
+                        mobile: true
+                    };
+                    if (providerType == "google") {
+                        obj["id_token"] = tokenResult.idToken;
+                    } else if (providerType == "facebook") {
+                        obj["accessToken"] = tokenResult.accessToken;
+                    }
+                    console.log("izaslo", tokenResult);
+                    this.ngZone.run(() => {
+                        this.loginWithPass(obj).subscribe(
+                            res => {
+                                // debugger;
+                                console.log("RES", res);
+                                res["auth_type"] =
+                                    providerType == "google" ? 2 : 3;
+                                appSettings.setString(
+                                    "isp_data_login",
+                                    JSON.stringify(res)
+                                );
+                                that.router.navigate(["home"]);
+                            },
+                            err => {
+                                console.log("ERR", err);
+                            }
+                        );
+                    });
                 }
             }
         );
     }
+
+    navigate(commands?: any[]): void {
+        console.log("ODE U NAVIGACIJU");
+        this.router.navigate(["home"]);
+    }
+
+    redi() {}
 }

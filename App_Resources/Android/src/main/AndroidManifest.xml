@@ -27,7 +27,7 @@
 			android:configChanges="keyboard|keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|locale|uiMode"
 			android:theme="@style/LaunchScreenTheme">
 
-			<meta-data android:name="SET_THEME_ON_LAUNCH" android:resource="@style/AppTheme" />
+			<meta-data android:name="SET_THEME_ON_LAUNCH" android:resource="@style/AppTheme"/>
 
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
@@ -39,8 +39,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- Custom URL Schemes -->
-                <data android:path="/auth" android:scheme="com.googleusercontent.apps.822285105532-ecf0oqog2mpvf2ug67ncvtp85741tjmc"/>
-                <!-- <data android:scheme="msalf376fa87-64a9-89a1-8b56-e0d48fc08107"/> -->
+                <data android:path="/auth" android:scheme="com.googleusercontent.apps.308014954641-k1mofnd02vadqhofcmus6guguke1hamp"/>
             </intent-filter>
 
 		</activity>

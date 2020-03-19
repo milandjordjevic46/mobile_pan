@@ -11,9 +11,12 @@ import { AuthGuardGuard } from "./auth/auth-guard.guard";
 
 const routes: Routes = [
     { path: "", redirectTo: "/home", pathMatch: "full" },
-    { path: "ns-login", component: LoginComponent },
-    { path: "ns-signin", component: SigninComponent },
     { path: "home", component: HomeComponent, canActivate: [AuthGuardGuard] },
+    {
+        path: "ns-login",
+        component: LoginComponent
+    },
+    { path: "ns-signin", component: SigninComponent },
     {
         path: "search",
         component: SearchComponent,
