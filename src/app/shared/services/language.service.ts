@@ -42,7 +42,7 @@ export class LanguageService extends Environment {
             lng = param.toUpperCase();
         }
         this.updateCurrentLng(lng);
-        let link = this.langLink + lng + "-" + lng + ".json";
+        let link = this.apiLink + "languages/" + lng + "-" + lng + ".json?v=1";
         return this.http.get(link);
     }
 }

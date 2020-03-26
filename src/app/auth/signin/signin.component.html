@@ -1,7 +1,41 @@
 <ns-nav-bar title="IPSOS MOBILE SIGNIN"></ns-nav-bar>
+<FlexboxLayout flexDirection="column" height='100%' justifyContent="space-between" class="background_login">
+    <StackLayout height="50%">
+        <FlexboxLayout flexDirection="row-reverse">
+            <Button text="go to LOG IN" class="-primary" pageTransition="slide" [nsRouterLink]="['/ns-login']"
+                style="padding-left: 10; padding-right: 10;"></Button>
+        </FlexboxLayout>
+    </StackLayout>
+    <StackLayout height="50%">
+        <FlexboxLayout flexDirection="column">
+            <StackLayout [formGroup]=" signinForm">
+                <TextField formControlName="ime" keyboardType="email" hint="{{lng?.reg?.r1}}"></TextField>
+                <TextField formControlName="prezime" keyboardType="email" hint="{{lng?.reg?.r2}}"></TextField>
+                <TextField formControlName="email" keyboardType="email" hint="{{lng?.reg?.r5}}"></TextField>
+            </StackLayout>
+        </FlexboxLayout>
+        <FlexboxLayout flexDirection="column">
+            <GridLayout rows="auto, auto, *" class="grid-layout-dropdown" height='30' columns="auto, *">
+                <Label *ngIf="!signinForm.value.zemlja" text='{{lng?.reg?.r18}}'></Label>
+                <DropDown #dd class="item-drop-down" itemsTextAlignment="center" [items]="lngs"
+                    (selectedIndexChanged)="onchange($event)" row="0" colSpan="2">
+                </DropDown>
+            </GridLayout>
 
-<FlexboxLayout flexDirection="column" justifyContent="space-between" class="background_signin">
-    <GridLayout class="background-login">
-        <WebView (loaded)="webViewLoaded($event)" style="height: 99%" [src]="webViewSrc"></WebView>
-    </GridLayout>
+            <GridLayout *ngIf="showMultiLngs" class="grid-layout-dropdown" height='30' rows="auto, auto, *"
+                columns="auto, *">
+                <Label *ngIf="!signinForm.value.lng" text='{{lng?.reg?.r19}}'></Label>
+                <DropDown #dd backroundColor="red" placeholderColor='red' class="item-drop-down"
+                    itemsTextAlignment="center" (selectedIndexChanged)="onchangeLng($event)" [items]="showMultiLngs"
+                    row="0" colSpan="2">
+                </DropDown>
+            </GridLayout>
+        </FlexboxLayout>
+        <FlexboxLayout style="margin-left: 15; margin-top: 10;" (tap)='checkPrivacy()' flexDirection='row'>
+            <Label *ngIf="!privacyChecked" text="&#xf14a;" class="far"></Label>
+            <Label *ngIf="privacyChecked" text="&#xf14a;" class="fas"></Label>
+            <Label text="{{lng?.reg?.r6}} {{lng?.reg?.r7}} {{lng?.reg?.r8}}" style="margin-left: 10;"></Label>
+        </FlexboxLayout>
+        <Button style="margin-top: 40" class="-primary" text="{{lng?.reg?.r17}}" (tap)="goSignin()"></Button>
+    </StackLayout>
 </FlexboxLayout>

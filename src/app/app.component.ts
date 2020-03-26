@@ -11,6 +11,8 @@ import * as app from "tns-core-modules/application";
 import { AuthService } from "./auth/auth.service";
 import { LanguageService } from "./shared/services/language.service";
 import * as appSettings from "tns-core-modules/application-settings";
+import * as firebase from "nativescript-plugin-firebase";
+const dialogs = require("ui/dialogs");
 
 @Component({
     selector: "ns-app",
@@ -33,16 +35,42 @@ export class AppComponent implements OnInit {
     ngOnInit(): void {
         this._activatedUrl = "/home";
         this._sideDrawerTransition = new SlideInOnTopTransition();
-        // appSettings.remove("isp_data_login");
+        // appSettings.remove("isp_data_login")
         this.router.events
             .pipe(filter((event: any) => event instanceof NavigationEnd))
             .subscribe(
                 (event: NavigationEnd) =>
                     (this._activatedUrl = event.urlAfterRedirects)
             );
-        this.auth_service.configureOAuthProviders();
-
-        // na pocetku setujem jezik aplikaciji
+        // PUSH MESSAGESS
+        firebase.init({
+            showNotifications: true,
+            showNotificationsWhenInForeground: false,
+            onPushTokenReceivedCallback: token => {
+                appSettings.setString("token_tok", token);
+                console.log("[Firebase] onPushTokenReceivedCallback:", {
+                    token
+                });
+            },
+            onMessageReceivedCallback: (message: firebase.Message) => {
+                console.log("[Firebase] onMessageReceivedCallback:", {
+                    message
+                });
+                dialogs.alert({
+                    title: message.title !== undefined ? message.title : "",
+                    message: message.body,
+                    okButtonText: "OK!"
+                });
+                console.log("radi");
+            }
+        });
+        // .then(() => {
+        //     console.log("[Firebase] Initialzed");
+        // })
+        // .catch(error => {
+        //     console.log("[Firebase] Initialize", { error });
+        // });
+        // na pocetku setujem jezik aplikaciji;
         this.lng_service.getLng().subscribe(
             res => {
                 this.lng_service.updateBroadCastMessage(res);
@@ -51,11 +79,6 @@ export class AppComponent implements OnInit {
         );
 
         this.auth_service.isLogged.subscribe(res => {
-            if (res == true && !this.logged) {
-                this.logged = true;
-                console.log("usao u navigate");
-                this.router.navigate(["home"]);
-            } else this.logged = res;
             console.log("Logged", res);
         });
     }

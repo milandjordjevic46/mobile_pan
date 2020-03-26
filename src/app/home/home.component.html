@@ -1,6 +1,6 @@
 <ns-nav-bar title="IPSOS MOBILE HOME"></ns-nav-bar>
 <FlexboxLayout flexDirection="column" style="margin-top: 20;" justifyContent="space-between" class="background_signin">
     <GridLayout class="background-login">
-        <WebView #webViewHome [src]="webViewSrc"></WebView>
+        <WebView #webViewHome (loadStarted)="onLoadStarted($event)" [src]="webViewSrc"></WebView>
     </GridLayout>
 </FlexboxLayout>

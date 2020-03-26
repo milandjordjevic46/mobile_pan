@@ -1,11 +1,22 @@
-import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
-import { RadSideDrawer } from "nativescript-ui-sidedrawer";
-import * as app from "tns-core-modules/application";
+import {
+    Component,
+    OnInit,
+    ViewChild,
+    ElementRef,
+    NgZone
+} from "@angular/core";
 import { WebView, LoadEventData } from "tns-core-modules/ui/web-view/web-view";
 import { AuthService } from "../auth/auth.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import * as appSettings from "tns-core-modules/application-settings";
 import { Page } from "tns-core-modules/ui/page/page";
+
+import {
+    AndroidApplication,
+    AndroidActivityBackPressedEventData
+} from "tns-core-modules/application";
+import * as application from "tns-core-modules/application";
+// import { exit } from "nativescript-exit";
 
 @Component({
     selector: "home",
@@ -16,6 +27,7 @@ export class HomeComponent implements OnInit {
     @ViewChild("webViewHome", { static: true }) WebViewRef: ElementRef;
     isp_data;
     webViewSrc: string;
+    webview;
     constructor(
         private auth_service: AuthService,
         private router: Router,
@@ -28,6 +40,7 @@ export class HomeComponent implements OnInit {
 
     ngOnInit(): void {
         // appSettings.remove('isp_data_login')
+        const webview = <WebView>this.WebViewRef.nativeElement;
 
         this.webViewSrc =
             "https://ipsosanketa.com/set_session.php" +
@@ -39,7 +52,6 @@ export class HomeComponent implements OnInit {
             this.isp_data.auth_type +
             "&mobile=true" +
             "&mobTel=true";
-        const webview = <WebView>this.WebViewRef.nativeElement;
         webview.on(WebView.loadFinishedEvent, (arg: LoadEventData) => {
             console.log("LOADED URL" + arg.url);
             if (
@@ -50,11 +62,29 @@ export class HomeComponent implements OnInit {
                 this.router.navigate(["ns-login"]);
                 appSettings.remove("isp_data_login");
             }
+
+            application.android.on(
+                AndroidApplication.activityBackPressedEvent,
+                (data: AndroidActivityBackPressedEventData) => {
+                    if ((data.eventName = "activityBackPressed")) {
+                        debugger;
+                        data.cancel = true;
+                        console.log("webview can go back " + webview.canGoBack);
+                        if (webview.canGoBack) {
+                            webview.goBack();
+                        }
+                        //  else exit();
+                    }
+                }
+            );
         });
     }
 
-    onDrawerButtonTap(): void {
-        const sideDrawer = <RadSideDrawer>app.getRootView();
-        sideDrawer.showDrawer();
+    onLoadStarted(args) {
+        const web = args.object;
+        if (web.android) {
+            web.android.getSettings().setDisplayZoomControls(false);
+            web.android.getSettings().setBuiltInZoomControls(false);
+        }
     }
 }
