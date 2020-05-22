@@ -1,6 +1,1 @@
-{
-  "appId": "org.nativescript.mobilepanel",
-  "minSdkVersion": 19,
-  "targetSdkVersion": null,
-  "multiDexEnabled": true
-}
+{"appId":"org.nativescript.mobilepanel","minSdkVersion":19,"targetSdkVersion":null}

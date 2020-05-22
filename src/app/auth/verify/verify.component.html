@@ -1,18 +1,17 @@
 <ns-nav-bar title="IPSOS MOBILE LOGIN"></ns-nav-bar>
 <FlexboxLayout flexDirection="column" justifyContent="space-between" class="background_login">
     <FlexboxLayout flexDirection="row-reverse">
-        <Button text="{{lng?.login?.l10}}" class="-primary" pageTransition="slide" clearHistory="true"
-            [nsRouterLink]="['/ns-signin']" style="padding-left: 10; padding-right: 10;"></Button>
+        <Button text="{{lng?.reg?.r21}}" class="-primary" pageTransition="slide" clearHistory="true"
+            [nsRouterLink]="['/ns-login']" style="padding-left: 10; padding-right: 10;"></Button>
     </FlexboxLayout>
     <StackLayout [formGroup]="loginForm">
-        <TextField formControlName="email" style="placeholder-color: #fff; color: #fff;" keyboardType="email"
-            hint="{{lng?.login?.l2}}"></TextField>
+        <TextField formControlName="repeatedPass" style="placeholder-color: #fff; color: #fff;" secure="true"
+            hint="{{lng?.login?.l3}}"></TextField>
         <TextField formControlName="pass" style="placeholder-color: #fff; color: #fff;" secure="true"
-            hint="{{lng?.login?.l3}}">
+            hint="{{lng?.login?.l8}}">
         </TextField>
         <Button text="{{lng?.login?.l4}}" type="submit" name="submit" (tap)="login()"
             class="-primary font-bold"></Button>
-        <Label class='mb-10 ml_forgotPass text_white' (tap)='forgotPass()' text="{{lng?.login?.l5}}?"></Label>
         <Label class='text-center mt-10 mb-10 text_white' text="{{lng?.login?.l6}}"></Label>
         <Button text="GOOGLE" (tap)="onLoginTap('google')" class="red_back text_white font-bold" width="50%"></Button>
         <Button text="FACEBOOK" (tap)="onLoginTap('facebook')" class="blue_back text_white font-bold"

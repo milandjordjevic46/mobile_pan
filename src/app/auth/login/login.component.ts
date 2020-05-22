@@ -6,6 +6,7 @@ import * as appSettings from "tns-core-modules/application-settings";
 import { Router } from "@angular/router";
 import { ITnsOAuthTokenResult } from "nativescript-oauth2";
 import { RouterExtensions } from "nativescript-angular/router";
+import * as toast from "nativescript-toast";
 
 @Component({
     selector: "ns-login",
@@ -22,18 +23,19 @@ export class LoginComponent implements OnInit {
         }
     };
     constructor(
-        private auth_service: AuthService,
-        private form_builder: FormBuilder,
-        private lang_service: LanguageService,
-        private router: Router,
-        private routerExtensions: RouterExtensions,
-        private ngZone: NgZone
+        protected auth_service: AuthService,
+        protected form_builder: FormBuilder,
+        protected lang_service: LanguageService,
+        protected router: Router,
+        protected routerExtensions: RouterExtensions,
+        protected ngZone: NgZone
     ) {
         // page.actionBarHidden = true;
         this.loginForm = this.form_builder.group({
             email: [null, Validators.required],
             pass: [null, Validators.required],
             mobile: true,
+            token: appSettings.getString("token_tok"),
             auth_type: 1
         });
         this.lang_service.broadCast.subscribe(
@@ -46,38 +48,7 @@ export class LoginComponent implements OnInit {
 
     ngOnInit(): void {}
 
-    // public onLoginTap(param) {
-    //     this.auth_service
-    //         .tnsOAuthLogin(param)
-    //         .then((result: ITnsOAuthTokenResult) => {
-    //             let obj = {
-    //                 mobile: true
-    //             };
-    //             if (param == "google") {
-    //                 obj["id_token"] = result.idToken;
-    //             } else if (param == "facebook") {
-    //                 obj["accessToken"] = result.accessToken;
-    //             }
-
-    //             this.auth_service.loginWithPass(obj).subscribe(
-    //                 res => {
-    //                     console.log("RES", res);
-    //                     res["auth_type"] = param == "google" ? 2 : 3;
-    //                     appSettings.setString(
-    //                         "isp_data_login",
-    //                         JSON.stringify(res)
-    //                     );
-    //                     this.router.navigate(["home"]);
-    //                 },
-    //                 err => {
-    //                     console.log("ERR", err);
-    //                 }
-    //             );
-    //         })
-    //         .catch(e => console.log("Error: " + e));
-    // }
-
-    public onLoginTap(param) {
+    public onLoginTap(param, code?) {
         this.auth_service
             .tnsOauthLogin(param)
             .then((result: ITnsOAuthTokenResult) => {
@@ -85,6 +56,7 @@ export class LoginComponent implements OnInit {
                     "back to login component with token " + result.accessToken
                 );
                 let obj = {
+                    token: appSettings.getString("token_tok"),
                     mobile: true
                 };
                 if (param == "google") {
@@ -92,6 +64,10 @@ export class LoginComponent implements OnInit {
                 } else if (param == "facebook") {
                     obj["accessToken"] = result.accessToken;
                 }
+
+                // first login or change pass
+                if (code) obj["code"] = code;
+
                 this.auth_service.loginWithPass(obj).subscribe(
                     res => {
                         console.log("RES", res);
@@ -100,30 +76,69 @@ export class LoginComponent implements OnInit {
                             "isp_data_login",
                             JSON.stringify(res)
                         );
-                        this.router.navigate(["home"]);
+                        if (param == "google")
+                            toast
+                                .makeText(this.lng["alerts"]["a2"], "long")
+                                .show();
+
+                        this.routerExtensions.navigate(["home"]);
                     },
                     err => {
                         console.log("ERR", err);
                     }
                 );
-                this.router.navigate(["ns-signin"]);
+                this.routerExtensions.navigate(["home"], {
+                    clearHistory: true
+                });
             })
             .catch(e => console.log("Error: " + e));
     }
 
     login(): any {
-        // this.router.navigate(["home"]);
+        console.log(this.loginForm.value);
+        if (!this.loginForm.value.code) {
+            if (!this.loginForm.value.email || !this.loginForm.value.pass)
+                return toast.makeText(this.lng["alerts"]["a1"], "long").show();
+        } else {
+            if (this.loginForm.value.pass != this.loginForm.value.repeatedPass)
+                return toast.makeText(this.lng["alerts"]["a3"], "long").show();
+        }
+
         this.auth_service.loginWithPass(this.loginForm.value).subscribe(
             res => {
+                if (!this.loginForm.value.email)
+                    this.loginForm.value.email = res["email"];
                 appSettings.setString(
                     "isp_data_login",
                     JSON.stringify(this.loginForm.value)
                 );
-                this.router.navigate(["home"]);
+                this.routerExtensions.navigate(["home"], {
+                    clearHistory: true
+                });
             },
             err => {
                 console.log("errr", err);
+                toast.makeText(err.error.msg, "long").show();
             }
         );
+    }
+
+    forgotPass() {
+        if (!this.loginForm.value.email)
+            toast.makeText(this.lng["alerts"]["a4"], "long").show();
+        else {
+            this.auth_service
+                .forgotPassword(this.loginForm.value.email)
+                .subscribe(
+                    res => {
+                        console.log("FORGOT PASS", res);
+                        toast.makeText(this.lng["login"]["l9"], "long").show();
+                        // if (res["data"]["code"] == 200)
+                    },
+                    err => {
+                        console.log("FORGOT ERROR", err);
+                    }
+                );
+        }
     }
 }

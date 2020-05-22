@@ -1,16 +1,24 @@
-import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
+import {
+    Component,
+    OnInit,
+    ViewChild,
+    ElementRef,
+    EventEmitter,
+} from "@angular/core";
 import { LanguageService } from "~/app/shared/services/language.service";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { AuthService } from "../auth.service";
 import {
     SelectedIndexChangedEventData,
-    ValueList
+    ValueList,
 } from "nativescript-drop-down";
+import * as toast from "nativescript-toast";
+import * as utils from "tns-core-modules/utils/utils";
 
 @Component({
     selector: "ns-signin",
     templateUrl: "./signin.component.html",
-    styleUrls: ["./signin.component.scss"]
+    styleUrls: ["./signin.component.scss"],
 })
 export class SigninComponent implements OnInit {
     lng: Object;
@@ -20,7 +28,6 @@ export class SigninComponent implements OnInit {
     lngs;
     GEO;
     showMultiLngs;
-    privacyChecked: boolean;
 
     constructor(
         private lang_service: LanguageService,
@@ -36,30 +43,30 @@ export class SigninComponent implements OnInit {
             lng: [null, Validators.required],
             panelid: [null, Validators.required],
             mobile: true,
-            privacy: this.privacyChecked
+            privacy: false,
         });
 
         this.auth_service.getGEO().subscribe(
-            res => {
+            (res) => {
                 let array = [];
                 for (let i in res["panels"]) {
                     array.push({
                         value: i,
-                        display: res["panels"][i]["name_lng"]
+                        display: res["panels"][i]["name"],
                     });
                 }
                 this.GEO = res;
                 this.lngs = new ValueList<string>(array);
             },
-            err => {}
+            (err) => {}
         );
 
         this.lang_service.broadCast.subscribe(
             // ovo je prevod
-            res => {
+            (res) => {
                 this.lng = res;
             },
-            err => {}
+            (err) => {}
         );
         // this.lang_service.currentLNG.subscribe(
         //     // subscribe-ovao sam se da bih na svaku promenu jezika ponovo pozivao webview
@@ -104,7 +111,7 @@ export class SigninComponent implements OnInit {
                     if (this.GEO["panels"][j].short_lng == jezici[i])
                         array.push({
                             value: jezici[i],
-                            display: this.GEO["panels"][j]["name_lng"]
+                            display: this.GEO["panels"][j]["name_lng"],
                         });
                 }
             }
@@ -112,19 +119,28 @@ export class SigninComponent implements OnInit {
         }
     }
 
-    // Langunage inside country(if more than one)
+    // Langunage inside country(if more than one);
     onchangeLng(args: SelectedIndexChangedEventData) {
         this.signinForm.value.lng = this.showMultiLngs.getValue(args.newIndex);
     }
 
     checkPrivacy() {
-        this.privacyChecked = !this.privacyChecked;
-        this.signinForm.value.privacy = this.privacyChecked;
+        this.signinForm.value.privacy = !this.signinForm.value.privacy;
+    }
+
+    seePolicy() {
+        return utils.openUrl("https://ipsosanketa.com/#!/EN/EN/faq");
+    }
+
+    openCountry(event) {
+        event.object.style.backgroundColor = "#333";
+    }
+
+    closeCountry(event) {
+        event.object.style.backgroundColor = "transparent";
     }
 
     goSignin() {
-        console.log("FORMA---valid", this.signinForm.valid);
-        console.log("FORMA", this.signinForm.value);
         if (
             !this.signinForm.value.ime ||
             !this.signinForm.value.prezime ||
@@ -134,19 +150,18 @@ export class SigninComponent implements OnInit {
             !this.signinForm.value.privacy ||
             !this.signinForm.value.panelid
         ) {
-            return alert("ne valja");
+            return toast.makeText(this.lng["alerts"]["a1"], "long").show();
         } else {
             this.auth_service.signin(this.signinForm.value).subscribe(
-                res => {
+                (res) => {
                     if (res["res"] == 0)
                         // successfully registrated
-                        console.log("SIGNIN RESS", res);
-                    if (res["res"] == 10)
-                        // already registrated
-                        alert(res["msg"] || "already registrated");
+                        toast.makeText(this.lng["reg"]["r16"], "long").show();
+                    // if (res["res"] == 10)
+                    //     // already registrated
                 },
-                err => {
-                    console.log("SIGNIN ERR", err);
+                (err) => {
+                    toast.makeText(this.lng["alerts"]["a5"], "long").show();
                 }
             );
         }

@@ -9,12 +9,17 @@ import {
 import * as appSettings from "tns-core-modules/application-settings";
 import { Observable } from "rxjs";
 import { AuthService } from "./auth.service";
+import { RouterExtensions } from "nativescript-angular/router";
 
 @Injectable({
     providedIn: "root"
 })
 export class AuthGuardGuard implements CanActivate {
-    constructor(private router: Router, private auth_service: AuthService) {}
+    constructor(
+        private router: Router,
+        private auth_service: AuthService,
+        private routerExtension: RouterExtensions
+    ) {}
     canActivate(
         next: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
@@ -25,7 +30,7 @@ export class AuthGuardGuard implements CanActivate {
         | UrlTree {
         if (!appSettings.getString("isp_data_login")) {
             this.auth_service.updateUserLogged(false);
-            this.router.navigate(["ns-login"]);
+            this.routerExtension.navigate(["ns-login"], { clearHistory: true });
             return false;
         } else {
             this.auth_service.updateUserLogged(true);

@@ -1,7 +1,7 @@
 {
     "using_ios": true,
     "using_android": true,
-    "analytics": false,
+    "analytics": true,
     "firestore": false,
     "realtimedb": false,
     "authentication": false,
@@ -11,11 +11,11 @@
     "messaging": true,
     "in_app_messaging": true,
     "crashlytics": false,
-    "storage": true,
-    "functions": true,
+    "storage": false,
+    "functions": false,
     "facebook_auth": false,
     "google_auth": false,
     "admob": false,
-    "dynamic_links": false,
+    "dynamic_links": true,
     "ml_kit": false
 }

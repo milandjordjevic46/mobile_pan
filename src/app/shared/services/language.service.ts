@@ -27,20 +27,19 @@ export class LanguageService extends Environment {
     getLng(param?) {
         let lng;
         let devLng;
-        if (
-            device.language != "en" &&
-            device.language != "sr" &&
-            device.language != "al" &&
-            device.language != "mkd" &&
-            device.language != "mne"
-        )
-            devLng = "EN";
-        else devLng = device.language.toUpperCase();
+        if (device.language == "en") devLng = "EN";
+        else if (device.language == "sr") devLng = "RS";
+        else if (device.language == "al") devLng = "AL";
+        else if (device.language == "mkd") devLng = "MK";
+        else if (device.language == "me") devLng = "ME";
+        else devLng = "EN";
+
         if (!param) {
             lng = devLng;
         } else {
             lng = param.toUpperCase();
         }
+
         this.updateCurrentLng(lng);
         let link = this.apiLink + "languages/" + lng + "-" + lng + ".json?v=1";
         return this.http.get(link);

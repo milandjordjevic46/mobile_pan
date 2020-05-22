@@ -1,22 +1,32 @@
 @import "../../shared/scss/colors.scss";
 
 .btnn {
-    background-color: $red;
+  background-color: $red;
 }
 
 .red_back {
-    background-color: $red;
+  background-color: $red;
 }
 .blue_back {
-    background-color: $blue;
+  background-color: $blue;
 }
 .text_white {
-    color: $white;
+  color: $white;
 }
 
 .background_login {
-    background-image: url("~/app/images/background.png");
-    background-repeat: no-repeat;
-    width: 100%;
-    background-size: cover;
+  background-image: url("~/app/images/background.png");
+  background-repeat: no-repeat;
+  width: 100%;
+  background-size: cover;
 }
+
+.ml_forgotPass {
+  margin-left: 20;
+}
+
+TextField {
+  font-size: 15;
+}
+
+// lsa;

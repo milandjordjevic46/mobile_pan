@@ -64,12 +64,26 @@ export class AppComponent implements OnInit {
                 console.log("radi");
             }
         });
-        // .then(() => {
-        //     console.log("[Firebase] Initialzed");
-        // })
-        // .catch(error => {
-        //     console.log("[Firebase] Initialize", { error });
-        // });
+        firebase.addOnDynamicLinkReceivedCallback(link => {
+            let getParams = name => {
+                const results = new RegExp("[\\?&]" + name + "=([^&#]*)").exec(
+                    link.url
+                );
+                if (!results) return 0;
+                return results[1] || 0;
+            };
+
+            console.log("CODE", getParams("code"));
+            console.log("LNG", getParams("lng"));
+            this.routerExtensions.navigate(["ns-verify"], {
+                clearHistory: true,
+                queryParams: {
+                    code: getParams("code"),
+                    lng: getParams("lng")
+                }
+            });
+        });
+
         // na pocetku setujem jezik aplikaciji;
         this.lng_service.getLng().subscribe(
             res => {

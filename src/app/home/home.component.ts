@@ -3,7 +3,7 @@ import {
     OnInit,
     ViewChild,
     ElementRef,
-    NgZone
+    NgZone,
 } from "@angular/core";
 import { WebView, LoadEventData } from "tns-core-modules/ui/web-view/web-view";
 import { AuthService } from "../auth/auth.service";
@@ -13,15 +13,15 @@ import { Page } from "tns-core-modules/ui/page/page";
 
 import {
     AndroidApplication,
-    AndroidActivityBackPressedEventData
+    AndroidActivityBackPressedEventData,
 } from "tns-core-modules/application";
 import * as application from "tns-core-modules/application";
-// import { exit } from "nativescript-exit";
+import { timeout } from "rxjs/operators";
 
 @Component({
     selector: "home",
     templateUrl: "./home.component.html",
-    styleUrls: ["./home.component.scss"]
+    styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent implements OnInit {
     @ViewChild("webViewHome", { static: true }) WebViewRef: ElementRef;
@@ -35,11 +35,12 @@ export class HomeComponent implements OnInit {
     ) {
         page.actionBarHidden = true;
         this.isp_data = JSON.parse(appSettings.getString("isp_data_login"));
+        console.log("ISP_DATA_LOGIN", appSettings.getString("isp_data_login"));
         if (!this.isp_data) router.navigate(["ns-login"]);
     }
 
     ngOnInit(): void {
-        // appSettings.remove('isp_data_login')
+        // appSettings.remove("isp_data_login")
         const webview = <WebView>this.WebViewRef.nativeElement;
 
         this.webViewSrc =
@@ -52,32 +53,36 @@ export class HomeComponent implements OnInit {
             this.isp_data.auth_type +
             "&mobile=true" +
             "&mobTel=true";
-        webview.on(WebView.loadFinishedEvent, (arg: LoadEventData) => {
+        webview.on(WebView.loadStartedEvent, (arg: LoadEventData) => {
             console.log("LOADED URL" + arg.url);
             if (
                 arg.url.includes("login_html.php") ||
                 arg.url.includes("login.php")
             ) {
                 this.auth_service.updateUserLogged(false);
-                this.router.navigate(["ns-login"]);
+                this.router.navigate(["ns-login"], {
+                    skipLocationChange: true,
+                });
                 appSettings.remove("isp_data_login");
             }
-
-            application.android.on(
-                AndroidApplication.activityBackPressedEvent,
-                (data: AndroidActivityBackPressedEventData) => {
-                    if ((data.eventName = "activityBackPressed")) {
-                        debugger;
-                        data.cancel = true;
-                        console.log("webview can go back " + webview.canGoBack);
-                        if (webview.canGoBack) {
-                            webview.goBack();
-                        }
-                        //  else exit();
-                    }
-                }
-            );
         });
+        // application.android.on(
+        //     AndroidApplication.activityBackPressedEvent,
+        //     (data: AndroidActivityBackPressedEventData) => {
+        //         if ((data.eventName = "activityBackPressed")) {
+        //             debugger;
+        //             // console.log("webview can go back " + webview.canGoBack);
+
+        //             if (webview) data.cancel = webview.canGoBack ? true : false;
+        //             else data.cancel = false;
+        //             // else data.cancel = false;
+        //             if (data.cancel) {
+        //                 webview.goBack();
+        //             } else data.cancel = false;
+        //             // // alert("nema dalje");
+        //         }
+        //     }
+        // );
     }
 
     onLoadStarted(args) {

@@ -39,7 +39,7 @@ export class AuthService extends Environment {
     }
 
     loginWithPass(data) {
-        return this.http.post("https://ipsosanketa.com/loginz.php", data, {
+        return this.http.post("https://ipsosanketa.com/login.php", data, {
             responseType: "json"
         });
     }
@@ -66,6 +66,7 @@ export class AuthService extends Environment {
     getGEO() {
         return this.http.get(this.apiLink + "php/geo.php");
     }
+
     public tnsOauthLogin(providerType): Promise<ITnsOAuthTokenResult> {
         this.client = new TnsOAuthClient(providerType);
 
@@ -84,5 +85,11 @@ export class AuthService extends Environment {
                 }
             );
         });
+    }
+
+    forgotPassword(email: string) {
+        return this.http.get(
+            this.apiLink + "php/forgot_password.php?email=" + email
+        );
     }
 }

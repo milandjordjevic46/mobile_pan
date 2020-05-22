@@ -28,6 +28,7 @@
     "nativescript-drop-down": "^5.0.4",
     "nativescript-oauth2": "^2.4.0",
     "nativescript-plugin-firebase": "^10.5.0",
+    "nativescript-toast": "^2.0.0",
     "nativescript-ui-sidedrawer": "~8.0.0",
     "ngx-cookie-service": "^2.4.0",
     "reflect-metadata": "~0.1.12",
